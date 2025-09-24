@@ -1,22 +1,22 @@
 import { ColorPicker, useColor} from 'react-color-palette';
 import 'react-color-palette/css'
 import './App.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
  
-  let hex = "#21345F"
+  // let hex = "#21345F"
 
 
-  const [colorValue, setColorValue] = useState(hex)
-  const [darkShadeValue, setDarkShadeValue] = useState()
+  const [colorValue, setColorValue] = useState("#21345F")
+  const [darkShadeValue, setDarkShadeValue] = useState({r : 0, g : 0, b : 0})
   const [rgbValue,setRGBValue] = useState({r : 0, g : 0, b : 0})
-  const [hexValue,setHexValue] = useState(hex)
+  const [hexValue,setHexValue] = useState("")
 // console.log(rgbValue);
 
   
-  
-  const hexToRGB = (hex) => {
+  const valueConversion = useEffect(() => {
+const hexToRGB = (hex) => {
       console.log(hex);
       
     hex = hex.replace(/#/,"")
@@ -32,7 +32,18 @@ function App() {
     
     
   }
-  hexToRGB(hex)
+  hexToRGB(colorValue)
+ 
+
+  const darkShade = ( {r , g , b }) => {
+   r = Math.floor(r *0.8)
+   g = Math.floor(g * 0.8)
+   b = Math.floor(b * 0.8)
+
+   setDarkShadeValue({ r, g ,b})
+  }
+
+  darkShade(rgbValue)
   
     const rgbToHex = ({ r ,g ,b }) => {
       console.log(r,g,b);
@@ -45,7 +56,10 @@ function App() {
    setHexValue(`#${Red}${Green}${Blue}`.toUpperCase()) 
   
 }
-rgbToHex(rgbValue)
+rgbToHex(darkShadeValue)
+  },[colorValue])
+  
+
   // const darkShade = () => {
   //   hexToRGB(hex)
   //   r = r * 0.8
@@ -60,18 +74,20 @@ rgbToHex(rgbValue)
 
   return (
     <>
-    <h1>Color Palette Generator</h1>
+    <div className='w-full h-full bg-white p -3 '>
+    <h1 className='text-center font-bold text-4xl'>Color Palette Generator</h1>
     {/* <ColorPicker color={color} onChange={setColor} /> */}
 
-  <input type="color" className='w-3xl h-5xl' value={colorValue} onChange={() => setColorValue(hexValue)}  />
+  <input type="color" className='w-56 h-56' value={colorValue} onChange={(e) => setColorValue(e.target.value)}  />
 
-    {/* <div>
-      <div style={{backgroundColor :`#${darkShadeValue}`, width: "100px", height : "100px"}}>{darkShadeValue}</div>
+    <div className='d-flex bg-white p-4'>
+      <div className='w-56 h-56' style={{background :`${hexValue}`, width: "100px", height : "100px"}}>{hexValue}</div>
       <div></div>
       <div></div>
       <div></div>
       <div></div>
-    </div> */}
+    </div>
+    </div>
     </>
     
     
